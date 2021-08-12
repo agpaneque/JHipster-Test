@@ -239,4 +239,22 @@ public class EmployeeResource {
                         .build()
             );
     }
+
+    //Test
+
+    /**
+     * {@code GET  /employees} : get all the employees.
+     *
+     *
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of employees in body.
+     */
+    @GetMapping("/employees/report")
+    public ResponseEntity<Mono<List<EmployeeDTO>>> getAllEmployeesByDepartment() {
+        log.debug("REST request to get a page of Employees");
+
+        Flux<EmployeeDTO> temp = employeeService.findAllByDepartment(1L);
+
+        return ResponseEntity.ok(temp.collectList());
+    }
 }

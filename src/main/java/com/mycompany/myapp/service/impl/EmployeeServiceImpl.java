@@ -77,4 +77,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.debug("Request to delete Employee : {}", id);
         return employeeRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Flux<EmployeeDTO> findAllByDepartment(Long Departmentid) {
+        log.debug("Request to get all Employees");
+        return employeeRepository.findByDepartment(Departmentid).map(employeeMapper::toDto);
+    }
 }

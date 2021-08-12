@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.service.dto.EmployeeDTO;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -55,4 +56,12 @@ public interface EmployeeService {
      * @return a Mono to signal the deletion
      */
     Mono<Void> delete(Long id);
+
+    /**
+     * Get all the employees by Department.
+     *
+     * @param id the id of the Department.
+     * @return the list of entities.
+     */
+    Flux<EmployeeDTO> findAllByDepartment(Long id);
 }
