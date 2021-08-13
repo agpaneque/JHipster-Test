@@ -13,6 +13,7 @@ export type EntityArrayResponseType = HttpResponse<IEmployee[]>;
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/employees');
+  protected resourceUrlFilter = this.applicationConfigService.getEndpointFor('api/employees/report');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -32,6 +33,11 @@ export class EmployeeService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<IEmployee>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  findByDepartment(id: number): Observable<EntityArrayResponseType> {
+    return this.http.get<IEmployee[]>(`${this.resourceUrlFilter}/${id}`, { observe: 'response' });
+    // return this.http.get('http://localhost:8080/api/employees/report/1');
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

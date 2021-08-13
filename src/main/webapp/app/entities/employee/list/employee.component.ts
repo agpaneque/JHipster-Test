@@ -22,6 +22,9 @@ export class EmployeeComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
+  departmentType = [1, 2, 3, 4, 5];
+  departmentSelectet: any;
+
   constructor(protected employeeService: EmployeeService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.employees = [];
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -51,6 +54,31 @@ export class EmployeeComponent implements OnInit {
           this.isLoading = false;
         }
       );
+  }
+
+  loadByDepartment(departmentid: any): void {
+    if (departmentid === 'All') {
+      this.reset();
+    } else {
+      this.page = 0;
+      this.employees = [];
+
+      this.employeeService.findByDepartment(departmentid).subscribe(
+        (res: HttpResponse<IEmployee[]>) => {
+          if (res.body) {
+            for (const d of res.body) {
+              this.employees.push(d);
+            }
+          }
+          //eslint-disable-next-line no-console
+          console.log(this.employees);
+        },
+        () => {
+          //eslint-disable-next-line no-console
+          console.log('Erron en la consulta');
+        }
+      );
+    }
   }
 
   reset(): void {

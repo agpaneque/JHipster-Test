@@ -5,6 +5,8 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
 import { EmployeeComponent } from '../list/employee.component';
 import { EmployeeDetailComponent } from '../detail/employee-detail.component';
 import { EmployeeUpdateComponent } from '../update/employee-update.component';
+import { EmployeeFilterComponent } from '../filter/employee-filter.component';
+
 import { EmployeeRoutingResolveService } from './employee-routing-resolve.service';
 
 const employeeRoute: Routes = [
@@ -32,6 +34,14 @@ const employeeRoute: Routes = [
   {
     path: ':id/edit',
     component: EmployeeUpdateComponent,
+    resolve: {
+      employee: EmployeeRoutingResolveService,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: ':id/filter',
+    component: EmployeeFilterComponent,
     resolve: {
       employee: EmployeeRoutingResolveService,
     },

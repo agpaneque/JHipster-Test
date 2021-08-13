@@ -3,6 +3,18 @@
     <span>Employees</span>
 
     <div class="d-flex justify-content-end">
+      <h4>Filtrar por Departamento:</h4>
+      <select class="mr-2" [(ngModel)]="departmentSelectet" #item (change)="loadByDepartment(item.value)">
+        <option value="All" selected>All</option>
+        <option *ngFor="let y of departmentType" [value]="y">{{ y }}</option>
+      </select>
+
+      <!--  <button class="btn btn-info mr-2" (click)="loadByDepartment()" [disabled]="isLoading"
+      >
+        <fa-icon icon="plus" [spin]="isLoading"></fa-icon>
+        <span>Filter by Department</span>
+      </button>
+ -->
       <button class="btn btn-info mr-2" (click)="reset()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span>Refresh List</span>
