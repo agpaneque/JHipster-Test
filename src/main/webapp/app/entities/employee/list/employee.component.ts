@@ -9,12 +9,17 @@ import { EmployeeService } from '../service/employee.service';
 import { EmployeeDeleteDialogComponent } from '../delete/employee-delete-dialog.component';
 import { ParseLinks } from 'app/core/util/parse-links.service';
 
+import { DepartmentService } from 'app/entities/department/service/department.service';
+
+import { IDepartment } from '../../department/department.model';
+
 @Component({
   selector: 'jhi-employee',
   templateUrl: './employee.component.html',
 })
 export class EmployeeComponent implements OnInit {
   employees: IEmployee[];
+
   isLoading = false;
   itemsPerPage: number;
   links: { [key: string]: number };
@@ -25,8 +30,16 @@ export class EmployeeComponent implements OnInit {
   departmentType = [1, 2, 3, 4, 5];
   departmentSelectet: any;
 
-  constructor(protected employeeService: EmployeeService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
+  departmentsSharedCollection: IDepartment[] = [];
+
+  constructor(
+    protected employeeService: EmployeeService,
+    protected modalService: NgbModal,
+    protected parseLinks: ParseLinks,
+    protected departmentService: DepartmentService
+  ) {
     this.employees = [];
+
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
     this.links = {
@@ -34,6 +47,19 @@ export class EmployeeComponent implements OnInit {
     };
     this.predicate = 'id';
     this.ascending = true;
+  }
+
+  loadDepartmetById(id: number): any {
+    this.employeeService.findDepartmetById(id).subscribe((res: HttpResponse<IDepartment>) => {
+      if (res.body) {
+        //eslint-disable-next-line no-console
+        console.log(res.body.departmentName);
+
+        return res.body.departmentName;
+      } else {
+        return '';
+      }
+    });
   }
 
   loadAll(): void {
@@ -70,12 +96,10 @@ export class EmployeeComponent implements OnInit {
               this.employees.push(d);
             }
           }
-          //eslint-disable-next-line no-console
-          console.log(this.employees);
         },
         () => {
           //eslint-disable-next-line no-console
-          console.log('Erron en la consulta');
+          console.log('Error en la consulta');
         }
       );
     }
@@ -94,6 +118,10 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAll();
+    this.loadDepartmetById(54564);
+
+    //eslint-disable-next-line no-console
+    console.log(this.employees);
   }
 
   trackId(index: number, item: IEmployee): number {

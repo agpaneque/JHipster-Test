@@ -7,6 +7,8 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { createRequestOption } from 'app/core/request/request-util';
 import { IEmployee, getEmployeeIdentifier } from '../employee.model';
 
+import { IDepartment } from '../../department/department.model';
+
 export type EntityResponseType = HttpResponse<IEmployee>;
 export type EntityArrayResponseType = HttpResponse<IEmployee[]>;
 
@@ -14,6 +16,7 @@ export type EntityArrayResponseType = HttpResponse<IEmployee[]>;
 export class EmployeeService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/employees');
   protected resourceUrlFilter = this.applicationConfigService.getEndpointFor('api/employees/report');
+  protected resourceUrlDepartment = this.applicationConfigService.getEndpointFor('/api/departments/');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -33,6 +36,10 @@ export class EmployeeService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<IEmployee>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+  //Trabajando aqui
+  findDepartmetById(id: number): Observable<EntityResponseType> {
+    return this.http.get<IDepartment>(`${this.resourceUrlDepartment}/${id}`, { observe: 'response' });
   }
 
   findByDepartment(id: number): Observable<EntityArrayResponseType> {

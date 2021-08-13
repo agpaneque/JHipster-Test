@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+
+import { HttpResponse } from '@angular/common/http';
 
 import { IEmployee } from '../employee.model';
 
 import { EmployeeService } from '../service/employee.service';
-import { EmployeeDeleteDialogComponent } from '../delete/employee-delete-dialog.component';
+
 import { ParseLinks } from 'app/core/util/parse-links.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
