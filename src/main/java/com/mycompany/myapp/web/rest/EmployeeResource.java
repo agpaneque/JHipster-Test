@@ -246,15 +246,20 @@ public class EmployeeResource {
      * {@code GET  /employees} : get all the employees.
      *
      *
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of employees in body.
+     * @param  id of the Departament.
+     * @return status {@code 200 (OK)} and the list of employees in body.
      */
-    @GetMapping("/employees/report")
-    public ResponseEntity<Mono<List<EmployeeDTO>>> getAllEmployeesByDepartment() {
-        log.debug("REST request to get a page of Employees");
+    @GetMapping("/employees/report/{id}")
+    public Mono<ResponseEntity<List<EmployeeDTO>>> getAllEmployeesByDepartment(@PathVariable Long id) {
+        log.debug("REST request to get the Employees of a Department");
 
-        Flux<EmployeeDTO> temp = employeeService.findAllByDepartment(1L);
-
-        return ResponseEntity.ok(temp.collectList());
+        return employeeService
+            .findAllByDepartment(id)
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+            .map(
+                response ->
+                    ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, applicationName, applicationName)).body(response)
+            );
     }
 }
