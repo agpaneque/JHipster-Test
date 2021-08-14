@@ -259,7 +259,7 @@ public class EmployeeResource {
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
             .map(
                 response ->
-                    ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, applicationName, applicationName)).body(response)
+                    ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, applicationName)).body(response)
             );
     }
 }
