@@ -24,6 +24,8 @@ export class DepartmentComponent implements OnInit {
   ascending!: boolean;
   ngbPaginationPage = 1;
 
+  departmentsCollection: IDepartment[] = [];
+
   constructor(
     protected departmentService: DepartmentService,
     protected activatedRoute: ActivatedRoute,

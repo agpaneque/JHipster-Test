@@ -209,6 +209,25 @@ public class DepartmentResource {
     }
 
     /**
+     * {@code GET  /departments/all} : get all the departments.
+     *
+     *
+     *
+     * @return The status {@code 200 (OK)} and the list of departments in body.
+     */
+    @GetMapping("/departments/all")
+    public Mono<ResponseEntity<List<DepartmentDTO>>> getAllAllDepartments() {
+        return departmentService
+            .findAllAll()
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+            .map(
+                response ->
+                    ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, applicationName, applicationName)).body(response)
+            );
+    }
+
+    /**
      * {@code GET  /departments/:id} : get the "id" department.
      *
      * @param id the id of the departmentDTO to retrieve.

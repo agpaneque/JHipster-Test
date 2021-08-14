@@ -3,11 +3,29 @@
     <span>Employees</span>
 
     <div class="d-flex justify-content-end">
-      <h4>Filtrar por Departamento:</h4>
+      <!--    <h3 class="mr-2">Filter by Department: </h3>
       <select class="mr-2" [(ngModel)]="departmentSelectet" #item (change)="loadByDepartment(item.value)">
         <option value="All" selected>All</option>
         <option *ngFor="let y of departmentType" [value]="y">{{ y }}</option>
-      </select>
+      </select> -->
+
+      <div class="form-group mr-2">
+        <label class="form-control-label" for="field_department">Filter by Department</label>
+        <select
+          class="form-control"
+          id="field_department"
+          data-cy="department"
+          name="department"
+          [(ngModel)]="departmentSelectet"
+          #item
+          (change)="loadByDepartment(item.value)"
+        >
+          <option value="All" selected>All</option>
+          <option value="{{ departmentOption.id }}" *ngFor="let departmentOption of departmentsCollection">
+            {{ departmentOption.departmentName }}
+          </option>
+        </select>
+      </div>
 
       <!--  <button class="btn btn-info mr-2" (click)="loadByDepartment()" [disabled]="isLoading"
       >

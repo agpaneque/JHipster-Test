@@ -8,9 +8,7 @@ import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EmployeeService } from '../service/employee.service';
 import { EmployeeDeleteDialogComponent } from '../delete/employee-delete-dialog.component';
 import { ParseLinks } from 'app/core/util/parse-links.service';
-
-import { DepartmentService } from 'app/entities/department/service/department.service';
-
+import { DepartmentService } from '../../department/service/department.service';
 import { IDepartment } from '../../department/department.model';
 
 @Component({
@@ -27,10 +25,9 @@ export class EmployeeComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
-  departmentType = [1, 2, 3, 4, 5];
   departmentSelectet: any;
 
-  departmentsSharedCollection: IDepartment[] = [];
+  departmentsCollection: IDepartment[] = [];
 
   constructor(
     protected employeeService: EmployeeService,
@@ -48,13 +45,26 @@ export class EmployeeComponent implements OnInit {
     this.predicate = 'id';
     this.ascending = true;
   }
+  //Para cargar los Nombres de los departamentos
+  LoadDepartment(): void {
+    this.departmentService.findAll().subscribe(
+      (res: HttpResponse<IDepartment[]>) => {
+        if (res.body) {
+          for (const d of res.body) {
+            this.departmentsCollection.push(d);
+          }
+        }
+      },
+      error => {
+        //eslint-disable-next-line no-console
+        console.log(error);
+      }
+    );
+  }
 
   loadDepartmetById(id: number): any {
     this.employeeService.findDepartmetById(id).subscribe((res: HttpResponse<IDepartment>) => {
       if (res.body) {
-        //eslint-disable-next-line no-console
-        console.log(res.body.departmentName);
-
         return res.body.departmentName;
       } else {
         return '';
@@ -117,11 +127,8 @@ export class EmployeeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.LoadDepartment();
     this.loadAll();
-    this.loadDepartmetById(54564);
-
-    //eslint-disable-next-line no-console
-    console.log(this.employees);
   }
 
   trackId(index: number, item: IEmployee): number {

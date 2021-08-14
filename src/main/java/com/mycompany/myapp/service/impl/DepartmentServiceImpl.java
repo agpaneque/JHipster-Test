@@ -61,6 +61,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentRepository.findAllBy(pageable).map(departmentMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Flux<DepartmentDTO> findAllAll() {
+        log.debug("Request to get all Departments");
+        return departmentRepository.findAll().map(departmentMapper::toDto);
+    }
+
     public Mono<Long> countAll() {
         return departmentRepository.count();
     }

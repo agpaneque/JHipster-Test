@@ -13,7 +13,7 @@ export type EntityArrayResponseType = HttpResponse<IDepartment[]>;
 @Injectable({ providedIn: 'root' })
 export class DepartmentService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/departments');
-
+  protected resourceUrlAll = this.applicationConfigService.getEndpointFor('api/departments/all');
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(department: IDepartment): Observable<EntityResponseType> {
@@ -43,6 +43,10 @@ export class DepartmentService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  findAll(): Observable<EntityArrayResponseType> {
+    return this.http.get<IDepartment[]>(this.resourceUrlAll, { observe: 'response' });
   }
 
   addDepartmentToCollectionIfMissing(
