@@ -84,4 +84,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.debug("Request to get all Employees");
         return employeeRepository.findByDepartment(Departmentid).map(employeeMapper::toDto);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Flux<EmployeeDTO> searchString(String search) {
+        log.debug("Request to search by String : {}", search);
+        return employeeRepository.searchString(search).map(employeeMapper::toDto);
+    }
 }

@@ -1,0 +1,51 @@
+
+entity Department {
+	departmentName String required
+}
+
+/**
+ * The Employee entity.
+ */
+entity Employee {
+	/**
+	* The firstname attribute.
+	*/
+	firstName String,
+	lastName String,
+	email String,
+	phoneNumber String,
+	salary Long,
+}
+
+entity Job {
+	jobTitle String,
+    jobDescription String,
+	jobHours Long
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Employee to Job{employee},
+	/**
+	* A relationship
+	*/
+	Department to
+	/**
+	* Another side of the same relationship
+	*/
+	Employee{department}
+}
+
+
+// Set pagination options
+paginate Employee with infinite-scroll
+paginate Job with pagination
+paginate Department with pagination
+
+// Use Data Transfer Objects (DTO)
+dto * with mapstruct
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

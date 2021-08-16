@@ -24,6 +24,8 @@ export class EmployeeComponent implements OnInit {
   page: number;
   predicate: string;
   ascending: boolean;
+  searchString: string;
+  empty: boolean;
 
   departmentSelectet: any;
 
@@ -36,6 +38,8 @@ export class EmployeeComponent implements OnInit {
     protected departmentService: DepartmentService
   ) {
     this.employees = [];
+    this.searchString = '';
+    this.empty = true;
 
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -91,7 +95,7 @@ export class EmployeeComponent implements OnInit {
         }
       );
   }
-
+  //Carga en la lista los empleados de un departamento
   loadByDepartment(departmentid: any): void {
     if (departmentid === 'All') {
       this.reset();
@@ -113,6 +117,10 @@ export class EmployeeComponent implements OnInit {
         }
       );
     }
+  }
+
+  goSearch(): void {
+    this.reset();
   }
 
   reset(): void {

@@ -64,4 +64,12 @@ public interface EmployeeService {
      * @return the list of entities.
      */
     Flux<EmployeeDTO> findAllByDepartment(Long id);
+
+    /**
+     * Get the employees that contain the String to search.
+     *
+     * @param string to search.
+     * @return the list of entities.
+     */
+    Flux<EmployeeDTO> searchString(String search);
 }

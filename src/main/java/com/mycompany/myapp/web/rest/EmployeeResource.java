@@ -57,7 +57,9 @@ public class EmployeeResource {
      * {@code POST  /employees} : Create a new employee.
      *
      * @param employeeDTO the employeeDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new employeeDTO, or with status {@code 400 (Bad Request)} if the employee has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new employeeDTO, or with status {@code 400 (Bad Request)} if
+     *         the employee has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/employees")
@@ -85,11 +87,13 @@ public class EmployeeResource {
     /**
      * {@code PUT  /employees/:id} : Updates an existing employee.
      *
-     * @param id the id of the employeeDTO to save.
+     * @param id          the id of the employeeDTO to save.
      * @param employeeDTO the employeeDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated employeeDTO,
-     * or with status {@code 400 (Bad Request)} if the employeeDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the employeeDTO couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated employeeDTO, or with status {@code 400 (Bad Request)} if
+     *         the employeeDTO is not valid, or with status
+     *         {@code 500 (Internal Server Error)} if the employeeDTO couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/employees/{id}")
@@ -130,14 +134,17 @@ public class EmployeeResource {
     }
 
     /**
-     * {@code PATCH  /employees/:id} : Partial updates given fields of an existing employee, field will ignore if it is null
+     * {@code PATCH  /employees/:id} : Partial updates given fields of an existing
+     * employee, field will ignore if it is null
      *
-     * @param id the id of the employeeDTO to save.
+     * @param id          the id of the employeeDTO to save.
      * @param employeeDTO the employeeDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated employeeDTO,
-     * or with status {@code 400 (Bad Request)} if the employeeDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the employeeDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the employeeDTO couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated employeeDTO, or with status {@code 400 (Bad Request)} if
+     *         the employeeDTO is not valid, or with status {@code 404 (Not Found)}
+     *         if the employeeDTO is not found, or with status
+     *         {@code 500 (Internal Server Error)} if the employeeDTO couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/employees/{id}", consumes = "application/merge-patch+json")
@@ -182,8 +189,9 @@ public class EmployeeResource {
      * {@code GET  /employees} : get all the employees.
      *
      * @param pageable the pagination information.
-     * @param request a {@link ServerHttpRequest} request.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of employees in body.
+     * @param request  a {@link ServerHttpRequest} request.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of employees in body.
      */
     @GetMapping("/employees")
     public Mono<ResponseEntity<List<EmployeeDTO>>> getAllEmployees(Pageable pageable, ServerHttpRequest request) {
@@ -210,7 +218,8 @@ public class EmployeeResource {
      * {@code GET  /employees/:id} : get the "id" employee.
      *
      * @param id the id of the employeeDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the employeeDTO, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the employeeDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/employees/{id}")
     public Mono<ResponseEntity<EmployeeDTO>> getEmployee(@PathVariable Long id) {
@@ -240,13 +249,13 @@ public class EmployeeResource {
             );
     }
 
-    //Test
+    // Test
 
     /**
      * {@code GET  /employees} : get all the employees.
      *
      *
-     * @param  id of the Departament.
+     * @param id of the Departament.
      * @return status {@code 200 (OK)} and the list of employees in body.
      */
     @GetMapping("/employees/report/{id}")
@@ -261,5 +270,24 @@ public class EmployeeResource {
                 response ->
                     ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, applicationName)).body(response)
             );
+    }
+
+    /**
+     * {@code GET /employees/search/{search}} : get the "searchString".
+     *
+     * @param search for employees that match with search
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the list of employeeDTO that match the search, or with status
+     *         {@code 404 (Not Found)}.
+     */
+    @GetMapping("/employees/search/{search}")
+    public Mono<ResponseEntity<List<EmployeeDTO>>> searchEmployeesByString(@PathVariable String search) {
+        log.debug("REST request to search Employee : {}", search);
+
+        return employeeService
+            .searchString(search)
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+            .map(response -> ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, ENTITY_NAME)).body(response));
     }
 }

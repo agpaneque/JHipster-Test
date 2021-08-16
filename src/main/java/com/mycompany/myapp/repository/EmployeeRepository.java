@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +23,13 @@ public interface EmployeeRepository extends R2dbcRepository<Employee, Long>, Emp
 
     @Query("SELECT * FROM employee entity WHERE entity.department_id IS NULL")
     Flux<Employee> findAllWhereDepartmentIsNull();
+
+    @Query(
+        "SELECT * FROM employee WHERE LOWER(first_name) like LOWER(CONCAT('%',$1,'%'))" +
+        "OR LOWER(last_name) like LOWER(CONCAT('%',$1,'%'))" +
+        "OR email like LOWER(CONCAT('%',$1,'%'))"
+    )
+    Flux<Employee> searchString(String search);
 
     // just to avoid having unambigous methods
     @Override
