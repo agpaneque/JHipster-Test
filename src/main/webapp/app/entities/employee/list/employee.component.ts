@@ -14,6 +14,7 @@ import { IDepartment } from '../../department/department.model';
 @Component({
   selector: 'jhi-employee',
   templateUrl: './employee.component.html',
+  styleUrls: ['./employee.component.css'],
 })
 export class EmployeeComponent implements OnInit {
   employees: IEmployee[];
@@ -25,7 +26,6 @@ export class EmployeeComponent implements OnInit {
   predicate: string;
   ascending: boolean;
   searchString: string;
-  empty: boolean;
 
   departmentSelectet: any;
 
@@ -39,7 +39,6 @@ export class EmployeeComponent implements OnInit {
   ) {
     this.employees = [];
     this.searchString = '';
-    this.empty = true;
 
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -120,7 +119,21 @@ export class EmployeeComponent implements OnInit {
   }
 
   goSearch(): void {
-    this.reset();
+    this.page = 0;
+    this.employees = [];
+    this.employeeService.findByString(this.searchString).subscribe(
+      (res: HttpResponse<IEmployee[]>) => {
+        if (res.body) {
+          for (const d of res.body) {
+            this.employees.push(d);
+          }
+        }
+      },
+      () => {
+        //eslint-disable-next-line no-console
+        console.log('Error en la consulta');
+      }
+    );
   }
 
   reset(): void {

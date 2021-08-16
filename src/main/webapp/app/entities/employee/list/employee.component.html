@@ -1,59 +1,60 @@
 <div>
   <h2 id="page-heading" data-cy="EmployeeHeading">
     <span>Employees</span>
-
-    <div class="d-flex justify-content-end">
-      <!--    <h3 class="mr-2">Filter by Department: </h3>
-      <select class="mr-2" [(ngModel)]="departmentSelectet" #item (change)="loadByDepartment(item.value)">
-        <option value="All" selected>All</option>
-        <option *ngFor="let y of departmentType" [value]="y">{{ y }}</option>
-      </select> -->
-      <form #searchForm="ngForm" (ngSubmit)="goSearch()">
-        <input type="text" name="search" [(ngModel)]="searchString" />
-        <small id="smallEmpty" *ngIf="empty">Vacio</small>
-        <input type="submit" name="submit" value="Buscar" class="btn btn-search" />
-      </form>
-
-      <div class="form-group mr-2">
-        <label class="form-control-label" for="field_department">Filter by Department</label>
-        <select
-          class="form-control"
-          id="field_department"
-          data-cy="department"
-          name="department"
-          [(ngModel)]="departmentSelectet"
-          #item
-          (change)="loadByDepartment(item.value)"
-        >
-          <option value="All" selected>All</option>
-          <option value="{{ departmentOption.id }}" *ngFor="let departmentOption of departmentsCollection">
-            {{ departmentOption.departmentName }}
-          </option>
-        </select>
-      </div>
-
-      <!--  <button class="btn btn-info mr-2" (click)="loadByDepartment()" [disabled]="isLoading"
-      >
-        <fa-icon icon="plus" [spin]="isLoading"></fa-icon>
-        <span>Filter by Department</span>
-      </button>
- -->
-      <button class="btn btn-info mr-2" (click)="reset()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span>Refresh List</span>
-      </button>
-
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-employee"
-        [routerLink]="['/employee/new']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span> Create a new Employee </span>
-      </button>
-    </div>
   </h2>
+  <div class="filter-row">
+    <label class="form-control-label" for="field_department">Filter by Department: </label>
+    <select
+      class=""
+      id="field_department"
+      data-cy="department"
+      name="department"
+      [(ngModel)]="departmentSelectet"
+      #item
+      (change)="loadByDepartment(item.value)"
+    >
+      <option value="All" selected>All</option>
+      <option value="{{ departmentOption.id }}" *ngFor="let departmentOption of departmentsCollection">
+        {{ departmentOption.departmentName }}
+      </option>
+    </select>
+
+    <form class="mr-2" #searchForm="ngForm" (ngSubmit)="goSearch()">
+      <div class="input-group">
+        <input
+          type="text"
+          name="search"
+          title="Search by first name, last name or email"
+          #search="ngModel"
+          [(ngModel)]="searchString"
+          placeholder="Search"
+          required="required"
+          pattern="[A-Za-z0-9\s]{2,254}"
+        />
+
+        <div class="input-group-append">
+          <input class="btn btn-sm btn-primary" type="submit" name="submit" value="Buscar" [disabled]="searchForm.invalid" />
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="rd-right">
+    <button class="btn btn-info mr-2" (click)="reset()" [disabled]="isLoading">
+      <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      <span>Refresh List</span>
+    </button>
+
+    <button
+      id="jh-create-entity"
+      data-cy="entityCreateButton"
+      class="btn btn-primary jh-create-entity create-employee"
+      [routerLink]="['/employee/new']"
+    >
+      <fa-icon icon="plus"></fa-icon>
+      <span> Create a new Employee </span>
+    </button>
+  </div>
 
   <jhi-alert-error></jhi-alert-error>
 

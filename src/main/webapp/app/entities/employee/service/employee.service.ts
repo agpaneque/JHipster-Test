@@ -17,6 +17,7 @@ export class EmployeeService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/employees');
   protected resourceUrlFilter = this.applicationConfigService.getEndpointFor('api/employees/report');
   protected resourceUrlDepartment = this.applicationConfigService.getEndpointFor('/api/departments/');
+  protected resourceUrlSearch = this.applicationConfigService.getEndpointFor('/api/employees/search/');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -45,6 +46,10 @@ export class EmployeeService {
   findByDepartment(id: number): Observable<EntityArrayResponseType> {
     return this.http.get<IEmployee[]>(`${this.resourceUrlFilter}/${id}`, { observe: 'response' });
     // return this.http.get('http://localhost:8080/api/employees/report/1');
+  }
+
+  findByString(searchString: string): Observable<EntityArrayResponseType> {
+    return this.http.get<IEmployee[]>(`${this.resourceUrlSearch}/${searchString}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
