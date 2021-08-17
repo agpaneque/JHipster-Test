@@ -88,6 +88,8 @@ export class EmployeeComponent implements OnInit {
         (res: HttpResponse<IEmployee[]>) => {
           this.isLoading = false;
           this.paginateEmployees(res.body, res.headers);
+
+          this.departmentSelectet = 'All';
         },
         () => {
           this.isLoading = false;
