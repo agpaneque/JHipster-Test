@@ -6,7 +6,27 @@
   width: auto;
   min-width: 150px;
   margin-right: 10px;
+  height: 31px;
+  border-radius: 4px;
 }
 .rd-right {
   float: right;
+}
+
+.filter-celd-1 {
+  text-align: center;
+  display: grid;
+}
+
+.filter-celd-1 label {
+  margin-bottom: 1px;
+}
+
+.filter-celd-2 .input-search {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.filter-celd-2 {
+  margin-top: 25px;
 }

@@ -1,42 +1,46 @@
 <div>
   <h2 id="page-heading" data-cy="EmployeeHeading">
-    <span>Employees</span>
+    <span>Employees </span>
   </h2>
   <div class="filter-row">
-    <label class="form-control-label" for="field_department">Filter by Department: </label>
-    <select
-      class=""
-      id="field_department"
-      data-cy="department"
-      name="department"
-      [(ngModel)]="departmentSelectet"
-      #item
-      (change)="loadByDepartment(item.value)"
-    >
-      <option value="All" selected>All</option>
-      <option value="{{ departmentOption.id }}" *ngFor="let departmentOption of departmentsCollection">
-        {{ departmentOption.departmentName }}
-      </option>
-    </select>
+    <div class="filter-celd-1">
+      <label class="form-control-label" for="field_department">Filter by Department</label>
+      <select
+        class=""
+        id="field_department"
+        data-cy="department"
+        name="department"
+        [(ngModel)]="departmentSelectet"
+        #item
+        (change)="loadByDepartment(item.value)"
+      >
+        <option value="All" selected>All</option>
+        <option value="{{ departmentOption.id }}" *ngFor="let departmentOption of departmentsCollection">
+          {{ departmentOption.departmentName }}
+        </option>
+      </select>
+    </div>
+    <div class="filter-celd-2">
+      <form class="mr-2" #searchForm="ngForm" (ngSubmit)="goSearch()">
+        <div class="input-group">
+          <input
+            type="text"
+            class="input-search"
+            name="search"
+            title="Search by first name, last name or email"
+            #search="ngModel"
+            [(ngModel)]="searchString"
+            placeholder="Search"
+            required="required"
+            pattern="[A-Za-z0-9\s]{2,20}"
+          />
 
-    <form class="mr-2" #searchForm="ngForm" (ngSubmit)="goSearch()">
-      <div class="input-group">
-        <input
-          type="text"
-          name="search"
-          title="Search by first name, last name or email"
-          #search="ngModel"
-          [(ngModel)]="searchString"
-          placeholder="Search"
-          required="required"
-          pattern="[A-Za-z0-9\s]{2,20}"
-        />
-
-        <div class="input-group-append">
-          <input class="btn btn-sm btn-primary" type="submit" name="submit" value="Buscar" [disabled]="searchForm.invalid" />
+          <div class="input-group-append">
+            <input class="btn btn-sm btn-primary" type="submit" name="submit" value="Buscar" [disabled]="searchForm.invalid" />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 
   <div class="rd-right">
