@@ -71,4 +71,12 @@ public interface EmployeeService {
      * @return the list of entities.
      */
     Flux<EmployeeDTO> searchString(String search);
+
+    /**
+     * Get the employees that contain the String to search.
+     *
+     * @param salary to search.
+     * @return the list of entities.
+     */
+    Flux<EmployeeDTO> salaryGreaterThan(Long salary);
 }

@@ -31,6 +31,9 @@ public interface EmployeeRepository extends R2dbcRepository<Employee, Long>, Emp
     )
     Flux<Employee> searchString(String search);
 
+    @Query("SELECT * FROM employee WHERE salary > :psalary ORDER BY salary")
+    Flux<Employee> salaryGreaterThan(Long psalary);
+
     // just to avoid having unambigous methods
     @Override
     Flux<Employee> findAll();
@@ -44,11 +47,16 @@ public interface EmployeeRepository extends R2dbcRepository<Employee, Long>, Emp
 
 interface EmployeeRepositoryInternal {
     <S extends Employee> Mono<S> insert(S entity);
+
     <S extends Employee> Mono<S> save(S entity);
+
     Mono<Integer> update(Employee entity);
 
     Flux<Employee> findAll();
+
     Mono<Employee> findById(Long id);
+
     Flux<Employee> findAllBy(Pageable pageable);
+
     Flux<Employee> findAllBy(Pageable pageable, Criteria criteria);
 }

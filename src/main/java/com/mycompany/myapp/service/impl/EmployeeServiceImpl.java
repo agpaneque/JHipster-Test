@@ -91,4 +91,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.debug("Request to search by String : {}", search);
         return employeeRepository.searchString(search).map(employeeMapper::toDto);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Flux<EmployeeDTO> salaryGreaterThan(Long salary) {
+        log.debug("Request to search by String : {}", salary);
+        return employeeRepository.salaryGreaterThan(salary).map(employeeMapper::toDto);
+    }
 }

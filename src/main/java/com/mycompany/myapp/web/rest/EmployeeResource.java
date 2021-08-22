@@ -2,8 +2,10 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.repository.EmployeeRepository;
 import com.mycompany.myapp.service.EmployeeService;
+import com.mycompany.myapp.service.dto.DepartmentDTO;
 import com.mycompany.myapp.service.dto.EmployeeDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import io.micrometer.core.ipc.http.HttpSender.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -249,10 +251,8 @@ public class EmployeeResource {
             );
     }
 
-    // Test
-
     /**
-     * {@code GET  /employees} : get all the employees.
+     * {@code GET  /employees/report} : get all the employees.
      *
      *
      * @param id of the Departament.
@@ -264,6 +264,27 @@ public class EmployeeResource {
 
         return employeeService
             .findAllByDepartment(id)
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+            .map(
+                response ->
+                    ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, applicationName)).body(response)
+            );
+    }
+
+    /**
+     * {@code GET  /employees/} : .
+     *
+     *
+     * @param Salary.
+     * @return status {@code 200 (OK)} and the list of employees in body.
+     */
+    @GetMapping("/employees/salarygreaterthan/{salary}")
+    public Mono<ResponseEntity<List<EmployeeDTO>>> getEmployeesSalaryGreaterThan(@PathVariable Long salary) {
+        log.debug("REST request to get the Employees of a Department");
+
+        return employeeService
+            .salaryGreaterThan(salary)
             .collectList()
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
             .map(
@@ -289,5 +310,56 @@ public class EmployeeResource {
             .collectList()
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
             .map(response -> ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, ENTITY_NAME)).body(response));
+    }
+
+    /**
+     * {@code GET /employees/test/{search}} : get the "searchString".
+     *
+     * @param search for employees that match with search
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the list of employeeDTO that match the search, or with status
+     *         {@code 404 (Not Found)}.
+     */
+    @GetMapping("/employees/test/{search}") // EndPoint para Pruebas
+    public Mono<ResponseEntity<List<EmployeeDTO>>> Test(@PathVariable String search) {
+        /*
+         * String[] newStr = search.split("\\s+"); for (int i = 0; i < newStr.length;
+         * i++) { log.debug(newStr[i]); }
+         */
+
+        Flux<EmployeeDTO> Temp = employeeService
+            .findAllByDepartment(1L)
+            .doOnNext(
+                emp -> {
+                    emp.setLastName("Valek");
+                    DepartmentDTO temp = new DepartmentDTO();
+                    temp.setDepartmentName("TI");
+                    temp.setId(1L);
+
+                    emp.setDepartment(temp);
+                }
+            )
+            .filter(emp -> !emp.getFirstName().equals("Elena"));
+
+        Temp.subscribe(
+            e -> log.info(e.toString()),
+            error -> log.error(error.getMessage()),
+            new Runnable() {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    log.info("Finalizo con Exito");
+                }
+            }
+        );
+
+        // return Mono.just(ResponseEntity.ok(search));
+
+        return Temp
+            .collectList()
+            .map(
+                response ->
+                    ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, applicationName)).body(response)
+            );
     }
 }

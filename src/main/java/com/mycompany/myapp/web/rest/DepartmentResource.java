@@ -237,6 +237,7 @@ public class DepartmentResource {
     public Mono<ResponseEntity<DepartmentDTO>> getDepartment(@PathVariable Long id) {
         log.debug("REST request to get Department : {}", id);
         Mono<DepartmentDTO> departmentDTO = departmentService.findOne(id);
+
         return ResponseUtil.wrapOrNotFound(departmentDTO);
     }
 

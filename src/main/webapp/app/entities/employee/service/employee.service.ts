@@ -49,7 +49,7 @@ export class EmployeeService {
   }
 
   findByString(searchString: string): Observable<EntityArrayResponseType> {
-    return this.http.get<IEmployee[]>(`${this.resourceUrlSearch}/${searchString}`, { observe: 'response' });
+    return this.http.get<IEmployee[]>(`${this.resourceUrlSearch}${searchString}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

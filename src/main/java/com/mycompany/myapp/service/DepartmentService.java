@@ -28,7 +28,7 @@ public interface DepartmentService {
     /**
      * Get all the departments.
      *
-     * @param pageable the pagination information.
+     *
      * @return the list of entities.
      */
     Flux<DepartmentDTO> findAllAll();
