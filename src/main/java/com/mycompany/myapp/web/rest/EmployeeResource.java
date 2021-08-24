@@ -308,6 +308,31 @@ public class EmployeeResource {
         return employeeService
             .searchString(search)
             .collectList()
+            .doOnNext(
+                element -> {
+                    //Solo de prueba
+                    log.debug(element.toString());
+                }
+            )
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+            .map(response -> ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, ENTITY_NAME)).body(response));
+    }
+
+    /**
+     * {@code GET /employees/withoutDepartments/} : .
+     *
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the list of employeeDTO that match the search, or with status
+     *         {@code 404 (Not Found)}.
+     */
+    @GetMapping("/employees/withoutdepartments/")
+    public Mono<ResponseEntity<List<EmployeeDTO>>> employeesWithoutDepartments() {
+        log.debug("REST request to search Employee without Department.");
+
+        return employeeService
+            .findAllWhereDepartmentIsNull()
+            .collectList()
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
             .map(response -> ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, ENTITY_NAME)).body(response));
     }

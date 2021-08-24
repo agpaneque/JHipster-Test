@@ -94,6 +94,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
+    public Flux<EmployeeDTO> findAllWhereDepartmentIsNull() {
+        log.debug("Request to search Employee without Department");
+        return employeeRepository.findAllWhereDepartmentIsNull().map(employeeMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Flux<EmployeeDTO> salaryGreaterThan(Long salary) {
         log.debug("Request to search by String : {}", salary);
         return employeeRepository.salaryGreaterThan(salary).map(employeeMapper::toDto);

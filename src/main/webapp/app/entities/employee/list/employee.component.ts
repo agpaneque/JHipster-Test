@@ -9,7 +9,8 @@ import { EmployeeService } from '../service/employee.service';
 import { EmployeeDeleteDialogComponent } from '../delete/employee-delete-dialog.component';
 import { ParseLinks } from 'app/core/util/parse-links.service';
 import { DepartmentService } from '../../department/service/department.service';
-import { IDepartment } from '../../department/department.model';
+import { Department, IDepartment } from '../../department/department.model';
+import { addSyntheticLeadingComment } from 'typescript';
 
 @Component({
   selector: 'jhi-employee',
@@ -64,15 +65,12 @@ export class EmployeeComponent implements OnInit {
       }
     );
   }
-
-  loadDepartmetById(id: number): any {
-    this.employeeService.findDepartmetById(id).subscribe((res: HttpResponse<IDepartment>) => {
-      if (res.body) {
-        return res.body.departmentName;
-      } else {
-        return '';
-      }
-    });
+  //LLena los Departamentos de la Lista de empleados
+  fillDepartment(): void {
+    this.employees.forEach(
+      element =>
+        (element.department!.departmentName = this.departmentsCollection.find(value => value.id === element.department?.id)?.departmentName)
+    );
   }
 
   loadAll(): void {
@@ -90,6 +88,7 @@ export class EmployeeComponent implements OnInit {
           this.paginateEmployees(res.body, res.headers);
 
           this.departmentSelectet = 'All';
+          this.fillDepartment();
         },
         () => {
           this.isLoading = false;
@@ -98,8 +97,27 @@ export class EmployeeComponent implements OnInit {
   }
   //Carga en la lista los empleados de un departamento
   loadByDepartment(departmentid: any): void {
+    this.searchString = '';
+
     if (departmentid === 'All') {
       this.reset();
+    } else if (departmentid === 'wd') {
+      this.page = 0;
+      this.employees = [];
+
+      this.employeeService.employeesWithoutDepartments().subscribe(
+        (res: HttpResponse<IEmployee[]>) => {
+          if (res.body) {
+            for (const d of res.body) {
+              this.employees.push(d);
+            }
+          }
+        },
+        () => {
+          //eslint-disable-next-line no-console
+          console.log('Error en la consulta');
+        }
+      );
     } else {
       this.page = 0;
       this.employees = [];

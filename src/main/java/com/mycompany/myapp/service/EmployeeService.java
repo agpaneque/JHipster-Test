@@ -73,6 +73,14 @@ public interface EmployeeService {
     Flux<EmployeeDTO> searchString(String search);
 
     /**
+     * Get the Employee without Department.
+     *
+     *
+     * @return the list of entities.
+     */
+    Flux<EmployeeDTO> findAllWhereDepartmentIsNull();
+
+    /**
      * Get the employees that contain the String to search.
      *
      * @param salary to search.
